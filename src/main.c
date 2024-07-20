@@ -19,11 +19,24 @@ int main(int argc, char** argv) {
     }
 
 
-    struct ServoMotor* motor = createServoMotor(15);
+    struct ServoMotor* turntableMotor = createServoMotor(15);
+    struct ServoMotor* yawMotor = createServoMotor(14);
 
+    int angle = 10;//idk 0 kinda bends the thing
+    int step = 10;
 
-    while(1){
-        motor->setAngle(motor, 90);
+    while(true){
+        printf("angle: %f\n", turntableMotor->currentAngle);
+        turntableMotor->setAngle(turntableMotor, angle);
+        yawMotor->setAngle(yawMotor, angle);
+
+        angle += step;
+
+        if (angle > 180 || angle < 10) {
+            step *= -1;
+        }
+
+        sleep_ms(200);
     }
 
     return 0;

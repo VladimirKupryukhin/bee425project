@@ -3,22 +3,22 @@
 
 struct ServoMotor* createServoMotor(int gpioPinPWM) {
 
-    printf("1\n");
+
     struct ServoMotor* motorObject = (struct ServoMotor*) malloc(sizeof(struct ServoMotor));
 
-    printf("2\n");
+
     // set the function pointers
     motorObject->setAngle = &setAngle;
     motorObject->degree2radian = &degree2radian;
     motorObject->radian2degree = &degree2radian;
 
-    printf("3\n");
+
     // set the variables
     motorObject->gpioPinPWM = gpioPinPWM;
     motorObject->currentDuty = 0;
     motorObject->currentAngle = 0;
 
-    printf("4\n");
+
     // initialize the gpio pin for pwm
     gpio_set_function(motorObject->gpioPinPWM, GPIO_FUNC_PWM);
 
@@ -37,17 +37,19 @@ struct ServoMotor* createServoMotor(int gpioPinPWM) {
     pwm_set_wrap(motorObject->gpioSlice, 10000);
 
     // Default position is in the middle, meaning 90 degrees
-    motorObject->setAngle(motorObject, 90);
+    motorObject->setAngle(motorObject, 50.0);
 
     pwm_set_enabled(motorObject->gpioSlice, true);
 
-
+    return motorObject;
 }
 
 
 void setAngle(struct ServoMotor* object, double target) {
+    printf("here\n");
     object->currentAngle = target;
-    int newTargetLevel = (target * 10000) / 180.0;
+    int newTargetLevel = 5.555 * target + 250;
+    printf("now here\n");
     pwm_set_chan_level(object->gpioSlice, object->gpioChannel, newTargetLevel);
 }
 
