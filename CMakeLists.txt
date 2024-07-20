@@ -9,12 +9,13 @@ set(CMAKE_CXX_STANDARD 17)
 include("./pico-sdk/external/pico_sdk_import.cmake")
 
 # Create the project called "pico_motherboard"
-project(pico_motherboard C CXX ASM)
+project(pico_solar_panel C CXX ASM)
 
 pico_sdk_init()
 
 add_executable(${PROJECT_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/servo.c
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
@@ -29,4 +30,6 @@ pico_enable_stdio_uart(${PROJECT_NAME} 0)
 # Pull in our pico_stdlib which pulls in commonly used features (gpio, timer-delay etc)
 target_link_libraries(${PROJECT_NAME}
     pico_stdlib
+    hardware_gpio
+    hardware_pwm
 )

@@ -1,4 +1,5 @@
 #include "pico/stdlib.h"
+#include "../include/servo.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -15,6 +16,14 @@ int main(int argc, char** argv) {
         gpio_put(25,index % 2);
         sleep_ms(1000);
         printf("%d \n", index);
+    }
+
+
+    struct ServoMotor* motor = createServoMotor(15);
+
+
+    while(1){
+        motor->setAngle(motor, 90);
     }
 
     return 0;
