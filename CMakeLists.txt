@@ -16,6 +16,7 @@ pico_sdk_init()
 add_executable(${PROJECT_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/servo.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/photoresistor.c
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
@@ -32,4 +33,5 @@ target_link_libraries(${PROJECT_NAME}
     pico_stdlib
     hardware_gpio
     hardware_pwm
+    hardware_adc
 )
