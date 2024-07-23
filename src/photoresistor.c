@@ -21,5 +21,8 @@ void read_level(struct PhotoResistor* object){
     float conversion_factor = 3.3f / (1 << 12);
     object->adc_value = adc_read();
     object->voltage = object->adc_value * conversion_factor;
+
+    // Voltage increases as darkness increases, hence the 1.0 - ...
     object->light_level = 1.0 - (1 / 1.6) * object->voltage;
+
 }

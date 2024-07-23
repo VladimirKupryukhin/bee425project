@@ -3,6 +3,7 @@
         "*.cs": "csharp",
         "servo.h": "c",
         "stdlib.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "photoresistor.h": "c"
     }
 }

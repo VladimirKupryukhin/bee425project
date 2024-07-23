@@ -17,6 +17,7 @@ add_executable(${PROJECT_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/servo.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/photoresistor.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/mux.c
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE 

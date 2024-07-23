@@ -1,6 +1,7 @@
 #include "pico/stdlib.h"
 #include "../include/servo.h"
 #include "../include/photoresistor.h"
+#include "../include/mux.h"
 #include "hardware/adc.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,6 +36,9 @@ int main(int argc, char** argv) {
     int step = 10;
 
     struct PhotoResistor* light = createPhotoResistor(0);
+
+    struct MUX* mux = createMux(21,20,19,18,22);
+    mux->selectInput(mux, 14);
 
 
     while(true){
