@@ -19,10 +19,6 @@ struct MUX {
 
 
 struct MUX* createMux(int pin0, int pin1, int pin2, int pin3, int enablePin);
-
-
-
-
 void selectInput(struct MUX* object, int input);
 
 

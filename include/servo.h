@@ -34,10 +34,6 @@ double degree2radian(double degree);
 
 double radian2degree(double radian);
 
-//helper function
-
-//int duty2ChannelLevel(int dutyPercentage);
-
 
 
 #endif

@@ -47,9 +47,6 @@ int main(int argc, char** argv) {
         printf("Light Value: %f\n", light->light_level );
 
         light->read_level(light);
-        //const float conversion_factor = 3.3f / (1 << 12);
-        //uint16_t result = adc_read();
-        //printf("Raw value: 0x%03x, voltage: %f V\n", result, result * conversion_factor);
         sleep_ms(200);
 
 
