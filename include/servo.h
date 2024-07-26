@@ -10,10 +10,9 @@
 #include <stdlib.h>
 
 struct ServoMotor{
-    int currentDuty; // in percentage
     double currentAngle; //in degrees
 
-    //GPIO stuff
+    //GPIO stuff. Take a look at the Pico PWM documentation
     int gpioPinPWM;
     int gpioSlice;
     int gpioChannel;

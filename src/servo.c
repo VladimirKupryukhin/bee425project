@@ -15,7 +15,6 @@ struct ServoMotor* createServoMotor(int gpioPinPWM) {
 
     // set the variables
     motorObject->gpioPinPWM = gpioPinPWM;
-    motorObject->currentDuty = 0;
     motorObject->currentAngle = 0;
 
 
@@ -46,20 +45,17 @@ struct ServoMotor* createServoMotor(int gpioPinPWM) {
 
 
 void setAngle(struct ServoMotor* object, double target) {
-    printf("here\n");
     object->currentAngle = target;
-    int newTargetLevel = 5.555 * target + 250;
-    printf("now here\n");
+    int newTargetLevel = 5.555 * target + 250;// Formula proportional to degree/pwm count
     pwm_set_chan_level(object->gpioSlice, object->gpioChannel, newTargetLevel);
 }
 
 double degree2radian(double degree){
-
-    return 0.0;
+    return degree * (3.14 / 180);
 }
 
 double radian2degree(double radian){
-    return 0.0;
+    return radian * (180 / 3.14);
 }
 
 
