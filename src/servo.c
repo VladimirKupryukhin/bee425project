@@ -36,7 +36,7 @@ struct ServoMotor* createServoMotor(int gpioPinPWM) {
     pwm_set_wrap(motorObject->gpioSlice, 10000);
 
     // Default position is in the middle, meaning 90 degrees
-    motorObject->setAngle(motorObject, 50.0);
+    motorObject->setAngle(motorObject, 90.0);
 
     pwm_set_enabled(motorObject->gpioSlice, true);
 
