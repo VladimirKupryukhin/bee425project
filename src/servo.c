@@ -17,7 +17,6 @@ struct ServoMotor* createServoMotor(int gpioPinPWM) {
     motorObject->gpioPinPWM = gpioPinPWM;
     motorObject->currentAngle = 0;
 
-
     // initialize the gpio pin for pwm
     gpio_set_function(motorObject->gpioPinPWM, GPIO_FUNC_PWM);
 

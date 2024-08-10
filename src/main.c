@@ -6,13 +6,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define ESC "\x1B"
+#define CLS ESC"[2J"
+#define HOME ESC"[H"
+
+void clear_to_top(void){
+    printf(CLS);
+    printf(HOME);
+    fflush(stdout);
+}
+
 int HorizTilt(struct PhotoResistor**, struct ServoMotor*);
 void GetValue(int num, struct MUX*, struct PhotoResistor**);
 bool CmpValues(struct PhotoResistor*, struct PhotoResistor*);
 int VertTilt(struct PhotoResistor**, struct ServoMotor*);
 
 //Arbitrary value for determining if 2 photoresistors have the same light level
-int tolerance = 0.05;
+double tolerance = 0.05;
 
 
 int main(int argc, char** argv) {
@@ -51,53 +61,42 @@ int main(int argc, char** argv) {
 
     while(true){
 
-       // printf("Raw Value: 0x%03x\n", light[0]->adc_value );
-       // printf("Voltage Value: %f\n", light[0]->voltage );
-       /*
-       for(int i = 0; i < 16; i++){
-        mux->selectInput(mux, i);
-        light[i]->read_level(light[i]);
-        printf("Light Value %d: %f\n", i, light[i]->light_level );
-       }
-        sleep_ms(5000);
-        */
+    bool HorizDone;
+    bool VertDone;
 
+    printf("Photoresistor Light Levels:\n");
 
-        //Focus on horiztional motor tilt first. 
-        while(true){
-            for(int i = 0; i < 16; i++){
-                GetValue(i, mux, light);
-                printf("Light Value %d: %f\n", i, light[i]->light_level );
-            }
-
-            if(HorizTilt(light, turntableMotor) != 0){
-                break;
-            }
+    //Get photoresistor values
+      for(int i = 0; i < 16; i++){
+            GetValue(i, mux, light);
+            printf("Light Value %d: %f\n", i, light[i]->light_level );
         }
 
-        //Tilt vertically after tilting horizontally.
-        while(true){
-            for(int i = 0; i < 16; i++){
-                GetValue(i, mux, light);
-                printf("Light Value %d: %f\n", i, light[i]->light_level );
-            }
+    printf("\nTilting Status:\n");
 
-            if(VertTilt(light, yawMotor) != 0){
-                break;
-            }
+        //Execute hoirzontal tilt
+        if(HorizTilt(light, turntableMotor) != 0){
+            printf("Horizontal angle set at %.2f degrees\n", turntableMotor->currentAngle);
+            HorizDone = true;    
         }
-        
-        break;
-        
-        // printf("angle: %f\n", turntableMotor->currentAngle);
-        // turntableMotor->setAngle(turntableMotor, angle);
-        // yawMotor->setAngle(yawMotor, angle);
+        else{ HorizDone = false;}   
 
-        // angle += step;
+        //Execute vertical tilt
+        if(VertTilt(light, yawMotor) != 0 && HorizDone){
+            printf("Vertical angle set at %.2f degrees\n", yawMotor->currentAngle);
+            VertDone = true;   
+        }
+        else{ VertDone = false;}
 
-        // if (angle > 180 || angle < 10) {
-        //     step *= -1;
-        // }
+        if(HorizDone && VertDone){
+            printf("Found light source\n");
+        }
+        else{
+            printf("Still searching...\n");
+        }
+
+        sleep_ms(500);
+        clear_to_top(); //Clear console output
     }
 
     return 0;
@@ -105,7 +104,8 @@ int main(int argc, char** argv) {
 
 //Compares the light levels of 2 photoresistors and returns true if they both fall within the tolerance range
 bool CmpValues(struct PhotoResistor* l1, struct PhotoResistor* l2){
-    if(((l1->light_level - l2->light_level) / tolerance) <= 1){
+    double margin = (l1->light_level - l2->light_level) / tolerance;
+    if(margin <= 1.0 && margin >= -1.0){
         return true;
     }
     else{ return false;}
@@ -124,16 +124,16 @@ int HorizTilt(struct PhotoResistor** light, struct ServoMotor* motor){
         return 1;
     }
 
-    else if(motor->currentAngle >= 170 || motor->currentAngle <= 10){
+    else if(motor->currentAngle >= 130.0 || motor->currentAngle <= 50.0){
         return 2;
     }
 
     else if(light[6]->light_level > light[14]->light_level){
-        motor->setAngle(motor, motor->currentAngle += 1);
+        motor->setAngle(motor, motor->currentAngle + 1.0);
         return 0;
     }
     else{
-        motor->setAngle(motor, motor->currentAngle -= 1);
+        motor->setAngle(motor, motor->currentAngle - 1.0);
         return 0;
     }
 }
@@ -145,16 +145,16 @@ int VertTilt(struct PhotoResistor** light, struct ServoMotor* motor){
         return 1;
     }
 
-    else if(motor->currentAngle >= 170 || motor->currentAngle <= 10){
+    else if(motor->currentAngle >= 130.0 || motor->currentAngle <= 50.0){
         return 2;
     }
 
-    else if(light[2]->light_level > light[10]->light_level){
-        motor->setAngle(motor, motor->currentAngle += 1);
+    else if(light[2]->light_level < light[10]->light_level){
+        motor->setAngle(motor, motor->currentAngle + 1.0);
         return 0;
     }
     else{
-        motor->setAngle(motor, motor->currentAngle -= 1);
+        motor->setAngle(motor, motor->currentAngle - 1.0);
         return 0;
     }
 }
